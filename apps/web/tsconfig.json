@@ -1,3 +1,13 @@
 {
-	"extends": ["@repo/typescript-config/svelte.json", "./.svelte-kit/tsconfig.json"]
+  "extends": [
+    "@repo/typescript-config/svelte.json",
+    "./.svelte-kit/tsconfig.json"
+  ],
+  "compilerOptions": {
+    "strictNullChecks": true
+  }
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

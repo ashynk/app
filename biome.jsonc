@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+<<<<<<< Updated upstream
+  "extends": ["ultracite/core", "ultracite/svelte"]
+}
+=======
+  "extends": [
+    "ultracite/core",
+    "ultracite/svelte"
+  ]
+}
+>>>>>>> Stashed changes
