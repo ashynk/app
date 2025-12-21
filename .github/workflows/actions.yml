@@ -49,11 +49,6 @@ jobs:
         env:
           MY_SECRET: ${{ steps.secrets.outputs.my-secret }}
 
-      # Alternative: Access secret using gcloud CLI
-      - name: Access secret via gcloud
-        run: |
-          gcloud secrets versions access latest --secret="gh-client-id"
-
 
 
 
