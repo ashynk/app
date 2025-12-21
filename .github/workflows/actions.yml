@@ -1,0 +1,71 @@
+# -----------------------------------------------------------------------------
+# Example GitHub Actions Workflow
+# Uses variables set by Terraform via GitHub Provider
+# -----------------------------------------------------------------------------
+
+name: Deploy to GKE
+
+on:
+  push:
+    branches: [main]
+    
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    # Required for Workload Identity Federation
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+
+      # Authenticate using Workload Identity Federation
+      # Variables are automatically set by Terraform
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.SERVICE_ACCOUNT_EMAIL }}
+
+      # Setup gcloud CLI
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      # Access secrets from Secret Manager
+      - name: Access secrets
+        id: secrets
+        uses: google-github-actions/get-secretmanager-secrets@v2
+        with:
+          secrets: |-
+            my-secret:${{ vars.GCP_PROJECT_ID }}/my-secret-name
+
+      # Use the secret (example: as environment variable)
+      - name: Use secret
+        run: |
+          echo "Secret is available as environment variable"
+        env:
+          MY_SECRET: ${{ steps.secrets.outputs.my-secret }}
+
+      # Alternative: Access secret using gcloud CLI
+      - name: Access secret via gcloud
+        run: |
+          gcloud secrets versions access latest --secret="my-secret-name"
+
+
+      # Get GKE credentials
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ${{ vars.GKE_CLUSTER_NAME }}
+          location: ${{ vars.GCP_REGION }}
+
+
