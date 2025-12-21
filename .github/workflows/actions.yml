@@ -46,7 +46,7 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@v2
         with:
           secrets: |-
-            my-secret:${{ vars.GCP_PROJECT_ID }}/my-secret-name
+            my-secret:${{ vars.GCP_PROJECT_ID }}/gh-client-id 
 
       # Use the secret (example: as environment variable)
       - name: Use secret
@@ -58,14 +58,9 @@ jobs:
       # Alternative: Access secret using gcloud CLI
       - name: Access secret via gcloud
         run: |
-          gcloud secrets versions access latest --secret="my-secret-name"
+          gcloud secrets versions access latest --secret="gh-client-id"
 
 
-      # Get GKE credentials
-      - name: Get GKE credentials
-        uses: google-github-actions/get-gke-credentials@v2
-        with:
-          cluster_name: ${{ vars.GKE_CLUSTER_NAME }}
-          location: ${{ vars.GCP_REGION }}
+
 
 
